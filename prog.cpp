@@ -5,6 +5,14 @@
 #include <math.h>
 using namespace std;
 
+float randompt(){
+	srand(time(nullptr));
+	int lowest=0,highest=1,range=highest-lowest;
+	float a=lowest+range * (rand() / (RAND_MAX + 1.0));
+	cout << a << endl;
+	return a;
+}
+
 float dist(vector<float> a, vector<float> b){
 	float result=0;
 	int d=a.size();
@@ -74,7 +82,9 @@ vector<vector<float>> updatecentroid(int m,int d,int k,vector<vector<float>> cla
 			}
 		}
 		for(int j=0;j<d;j++){
-			temp[j]=temp[j]/count;
+			if(count!=0){
+				temp[j]=temp[j]/count;
+			}
 		}
 		newcentroid.push_back(temp);
 	}
@@ -86,16 +96,33 @@ vector<vector<float>> kcluster(int m,int d,int k, vector<vector<float>> data){
 	for(int i=0;i<k;i++){
 		centroid.push_back(data[i]);
 	}
+	/*vector <float> temp,temp1;
+	temp.push_back(0.91);
+	temp.push_back(0.4);
+	temp.push_back(0.2);
+	centroid.push_back(temp);
+	temp1.push_back(0.76);
+	temp1.push_back(0.34);
+	temp1.push_back(1.2);
+	centroid.push_back(temp1);*/
+	//cout << "First Centroid" << endl;
 	//printvector(centroid);
 	classification=classify(m,d,k,data,centroid);
+	//cout << "First Classification" << endl;
+	//printvector(classification);
 	int count=0;
 	//cout << "hello" << endl;
-	while(equalvector(classification,classify(m,d,k,data,updatecentroid(m,d,k,classification,data)))==0){
+	while(equalvector(classification,classify(m,d,k,data,updatecentroid(m,d,k,classification,data)))==0 || count<10){
+	//for(int i=0;i<10;i++){
 		centroid=updatecentroid(m,d,k,classification,data);
+		//cout << "Centroid Number " << count+2 << endl;
+		//printvector(centroid);
 		classification=classify(m,d,k,data,centroid);
+		//cout << "Classification Number " << count+2 << endl;
+		//printvector(classification);
 		count++;
 		if(count>100){
-			cout << "Broken" << endl;
+			//cout << "Broken" << endl;
 			break;
 		}
 	}
@@ -123,13 +150,14 @@ int main(int argc, char *argv[]){
 		}
 		data.push_back(temp);
 	}
+	//printvector(data);
 	vector<vector<float>> finalcentroid=kcluster(m,d,k,data);
 	printvector(finalcentroid);
 
 
-	//testing code only
+	//testing code below
 	//printvector(data);
-	vector<float> a,b,c,e;
+	/*vector<float> a,b,c,e;
 	a.push_back(1);
 	a.push_back(1);
 	b.push_back(2);
@@ -145,7 +173,7 @@ int main(int argc, char *argv[]){
 	testdata.push_back(b);
 	testdata.push_back(c);
 	testdata.push_back(e);
-	/*vector<vector<float>> testclassification=classify(4,2,2,testdata,centroid);
+	vector<vector<float>> testclassification=classify(4,2,2,testdata,centroid);
 	centroid=updatecentroid(4,2,2,testclassification,testdata);
 	testclassification=classify(4,2,2,testdata,centroid);
 	printvector(testclassification);*/
