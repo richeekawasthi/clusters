@@ -153,7 +153,19 @@ int main(int argc, char *argv[]){
 	//printvector(data);
 	vector<vector<float>> finalcentroid=kcluster(m,d,k,data);
 	printvector(finalcentroid);
-
+	ofstream outfile;
+	outfile.open("clusters.txt");
+	for(int i=0;i<k;i++){
+		for(int j=0;j<d;j++){
+			outfile << finalcentroid[i][j];
+			if(j!=d-1){
+				outfile << " ";
+			}
+		}
+		if(i!=k-1){
+			outfile << endl;
+		}
+	}
 
 	//testing code below
 	//printvector(data);
