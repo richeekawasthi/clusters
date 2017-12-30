@@ -137,20 +137,25 @@ int main(int argc, char *argv[]){
 		return 1;
 	}
 	int k = stoi(argv[2]);
-	string test,test1;
-	infile >> test >> test1;
-	int m=stoi(test);
-	int d=stoi(test1);
 	vector <vector <float>> data;
-	for(int i=0;i<m;i++){
-		vector <float> temp;
-		for(int j=0;j<d;j++){
-			infile >> test;
-			temp.push_back(stof(test));
-		}
-		data.push_back(temp);
+	vector<string> file;
+	string line;
+	while(getline(infile,line)){
+		file.push_back(line);
 	}
-	//printvector(data);
+	int m=file.size();
+	for(int j=0;j<m;j++){
+		string to_split = file[j];
+		vector<float> array;
+		size_t pos = 0, found;
+		while((found = to_split.find_first_of(' ', pos)) != std::string::npos) {
+			array.push_back(stof(to_split.substr(pos, found - pos)));
+			pos = found+1;
+		}
+		array.push_back(stof(to_split.substr(pos)));
+		data.push_back(array);
+   	}
+	int d=data[0].size();
 	vector<vector<float>> finalcentroid=kcluster(m,d,k,data);
 	printvector(finalcentroid);
 	ofstream outfile;
